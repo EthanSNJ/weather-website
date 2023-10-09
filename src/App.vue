@@ -1,20 +1,17 @@
-<script setup lang="ts">
-</script>
+<script setup lang="ts"></script>
 
 <template>
   <!-- <nav>
     <router-link to="/">Home</router-link> | <router-link to="/hello">Hello</router-link>
   </nav> -->
-  <main>
-    <router-view />
-  </main>
+  <router-view />
 </template>
 
 <style>
-  #app {
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    background-color: #5AA9E6;
-    height: 100%;
-  }
+#app {
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: #5aa9e6;
+  height: 100%;
+}
 </style>
