@@ -7,7 +7,7 @@ let suggestion = ref({
   label: "",
   city: "",
 });
-let accessKey = "2a8028041272f07616da2069c2c718ff";
+let accessKey = import.meta.env.VITE_POSITION_STACK_KEY;
 
 watch(input, (value) => {
   if (value.length >= 3) {
@@ -37,7 +37,7 @@ const searchCity = (city: string) => {
       days: "3",
     },
     headers: {
-      "X-RapidAPI-Key": "a0daaa8e2fmshf2ecd3b4e93642ap1ec345jsnf9b442d51344",
+      "X-RapidAPI-Key": import.meta.env.VITE_RAPID_API_KEY,
       "X-RapidAPI-Host": "weatherapi-com.p.rapidapi.com",
     },
   };
