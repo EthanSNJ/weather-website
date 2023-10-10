@@ -7,19 +7,27 @@ let suggestion = ref({
   label: "",
   city: "",
 });
-let accessKey = import.meta.env.VITE_POSITION_STACK_KEY;
 
 watch(input, (value) => {
   if (value.length >= 3) {
     console.log("searching for", value);
     axios
       .get(
-        `http://api.positionstack.com/v1/forward?access_key=${accessKey}&query=${input.value}`
+        `https://api.mapbox.com/search/searchbox/v1/suggest?q=${
+          input.value
+        }&access_token=${
+          import.meta.env.VITE_MAPBOX
+        }&session_token=12345678coucou&types=country,city`
       )
       .then((response) => {
-        console.log(response.data);
-        suggestion.value.label = response.data.data[0].label;
-        suggestion.value.city = response.data.data[0].name;
+        console.log("response data == ", response.data);
+        suggestion.value.label =
+          response.data.suggestions[0].feature_type === "country"
+            ? response.data.suggestions[0].name
+            : response.data.suggestions[0].name +
+              ", " +
+              response.data.suggestions[0].context.country.name;
+        suggestion.value.city = response.data.suggestions[0].name;
       })
       .catch((error) => {
         console.log(error);
