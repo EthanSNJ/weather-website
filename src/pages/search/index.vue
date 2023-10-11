@@ -1,12 +1,17 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import axios from "axios";
+import MainWeatherCard from "../../components/MainWeatherCard.vue";
+import WeatherDataCard from "../../components/WeatherDataCard.vue";
+import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../../types";
 
 let input = ref("");
 let suggestion = ref({
   label: "",
   city: "",
+  formatted: "",
 });
+let weather = ref<Weather>();
 
 watch(input, (value) => {
   if (value.length >= 3) {
@@ -28,6 +33,12 @@ watch(input, (value) => {
               ", " +
               response.data.suggestions[0].context.country.name;
         suggestion.value.city = response.data.suggestions[0].name;
+        response.data.suggestions[0].feature_type === "country"
+          ? (suggestion.value.formatted = response.data.suggestions[0].name)
+          : (suggestion.value.formatted =
+              response.data.suggestions[0].name +
+              ", " +
+              response.data.suggestions[0].place_formatted);
       })
       .catch((error) => {
         console.log(error);
@@ -54,11 +65,82 @@ const searchCity = (city: string) => {
     .request(options)
     .then(function (response) {
       console.log(response.data);
+      weather.value = mapWeather(response.data);
+      console.log("mapped weather", weather)
     })
     .catch(function (error) {
       console.error(error);
     });
 };
+
+const mapMainCardData = (weatherApiData: any) => {
+  const mainCardData: MainWeather = {
+    title: suggestion.value.formatted,
+    time: weatherApiData.current.last_updated_epoch,
+    temperature: weatherApiData.current.temp_c,
+    icon: "https://" + weatherApiData.current.condition.icon,
+    status: weatherApiData.current.condition.text,
+  };
+  return mainCardData;
+};
+
+const mapWeatherData = (weatherApiData: any) => {
+  const weatherData: WeatherData = {
+    title: "Weather today in " + suggestion.value.formatted,
+    feelsLike: weatherApiData.current.feelslike_c,
+    minTemp: weatherApiData.forecast.forecastday[0].day.mintemp_c,
+    maxTemp: weatherApiData.forecast.forecastday[0].day.maxtemp_c,
+    humidity: weatherApiData.current.humidity,
+    pressure: weatherApiData.current.pressure_mb,
+    visibility: weatherApiData.current.vis_km,
+    wind: weatherApiData.current.wind_kph,
+    sunrise: weatherApiData.forecast.forecastday[0].astro.sunrise,
+    sunset: weatherApiData.forecast.forecastday[0].astro.sunset,
+    uv: weatherApiData.current.uv,
+    moonPhase: weatherApiData.forecast.forecastday[0].astro.moon_phase,
+  };
+  return weatherData;
+};
+
+const mapHourlyForecast = (weatherApiData: any) => {
+  const hourlyForecast: HourlyForecast[] = [];
+  for (let i = 0; i < 24; i++) {
+    const hourlyForecastData: HourlyForecast = {
+      time: weatherApiData.forecast.forecastday[0].hour[i].time_epoch,
+      temperature: weatherApiData.forecast.forecastday[0].hour[i].temp_c,
+      icon: "https://" + weatherApiData.forecast.forecastday[0].hour[i].condition.icon,
+      precipitationPercentage: weatherApiData.forecast.forecastday[0].hour[i].will_it_rain,
+    };
+    hourlyForecast.push(hourlyForecastData);
+  }
+  return hourlyForecast;
+};
+
+const mapDailyForecast = (weatherApiData: any) => {
+  const dailyForecast: DailyForecast[] = [];
+  for (let i = 0; i < 3; i++) {
+    const dailyForecastData: DailyForecast = {
+      date: weatherApiData.forecast.forecastday[i].date_epoch,
+      minTemp: weatherApiData.forecast.forecastday[i].day.mintemp_c,
+      maxTemp: weatherApiData.forecast.forecastday[i].day.maxtemp_c,
+      icon: "https://" + weatherApiData.forecast.forecastday[i].day.condition.icon,
+      precipitationPercentage: weatherApiData.forecast.forecastday[i].day.daily_will_it_rain,
+    };
+    dailyForecast.push(dailyForecastData);
+  }
+  return dailyForecast;
+};
+
+const mapWeather = (weatherApiData: any) => {
+  const weather: Weather = {
+    mainWeather: mapMainCardData(weatherApiData),
+    weatherData: mapWeatherData(weatherApiData),
+    hourlyForecast: mapHourlyForecast(weatherApiData),
+    dailyForecast: mapDailyForecast(weatherApiData),
+  };
+  return weather;
+};
+
 </script>
 
 <template>
@@ -77,6 +159,8 @@ const searchCity = (city: string) => {
         >{{ suggestion.label }}</span
       >
     </div>
+    <MainWeatherCard v-if="weather" :mainWeather="weather.mainWeather" />
+    <WeatherDataCard v-if="weather" :weatherData="weather.weatherData" />
   </div>
 </template>
 
@@ -88,6 +172,7 @@ const searchCity = (city: string) => {
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-around;
 }
 
 #input-container {
@@ -108,10 +193,17 @@ const searchCity = (city: string) => {
 
 #suggestion {
   position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
+  top: 105%;
+  left: 50%;
+  transform: translateX(-50%);
+  height: 3rem;
+  width: 85%;
   background-color: white;
-  border: 1px solid black;
+  display: flex;
+  align-items: center;
+  padding: 0 1rem;
+  border-radius: 5px;
+  cursor: pointer;
+  /* border: 1px solid black; */
 }
 </style>
