@@ -29,7 +29,7 @@ export type WeatherData = {
 };
 
 export type HourlyForecast = {
-    time: string;
+    time: number;
     temperature: number;
     icon: string;
     precipitationPercentage: number;

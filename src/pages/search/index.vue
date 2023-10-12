@@ -3,6 +3,7 @@ import { ref, watch } from "vue";
 import axios from "axios";
 import MainWeatherCard from "../../components/MainWeatherCard.vue";
 import WeatherDataCard from "../../components/WeatherDataCard.vue";
+import HourlyForecastCard from "../../components/HourlyForecastCard.vue";
 import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../../types";
 
 let input = ref("");
@@ -161,6 +162,7 @@ const mapWeather = (weatherApiData: any) => {
     </div>
     <MainWeatherCard v-if="weather" :mainWeather="weather.mainWeather" />
     <WeatherDataCard v-if="weather" :weatherData="weather.weatherData" />
+    <HourlyForecastCard v-if="weather" :hourlyForecast="weather.hourlyForecast" />
   </div>
 </template>
 
