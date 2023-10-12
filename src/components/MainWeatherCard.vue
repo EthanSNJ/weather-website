@@ -43,7 +43,7 @@ const formatUnixTimestampToHHMM = (timestamp: number): string => {
 <style scoped>
 #mainWeatherWrapper {
   margin-top: 3.5rem;
-  height: 20%;
+  height: 180px;
   width: 50%;
   background-color: #7fc8f8;
   border-radius: 15px;
@@ -86,5 +86,23 @@ const formatUnixTimestampToHHMM = (timestamp: number): string => {
 .temperatureStatusWrapper > p:nth-child(2) {
   font-size: 1.5rem;
   font-weight: 500;
+}
+
+@media (max-width: 1100px) {
+  #mainWeatherWrapper {
+    width: 70%;
+  }
+}
+
+@media (max-width: 880px) {
+  #mainWeatherWrapper {
+    height: 230px;
+  }
+}
+
+@media (max-width: 550px) {
+  #mainWeatherWrapper {
+    width: 90%;
+  }
 }
 </style>

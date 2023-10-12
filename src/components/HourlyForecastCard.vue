@@ -37,13 +37,17 @@ const filteredHourlyForecast = computed(() => {
 #hourlyForecastWrapper {
   display: flex;
   flex-direction: row;
-  height: 20%;
+  height: 200px;
   width: 50%;
   background-color: #7fc8f8;
   border-radius: 15px;
   padding: 1rem;
   color: #f9f9f9;
   overflow-x: auto;
+}
+
+#hourlyForecastWrapper > .hourlyForecast:first-child {
+  font-weight: 800;
 }
 
 .hourlyForecast {
@@ -56,8 +60,23 @@ const filteredHourlyForecast = computed(() => {
   min-width: 100px;
 }
 
+.hourlyForecast > p:first-child {
+  font-size: 1.2rem;
+}
 
 #hourlyForecastWrapper > .hourlyForecast:last-child {
   border-right: none;
+}
+
+@media (max-width: 1100px) {
+  #hourlyForecastWrapper {
+    width: 70%;
+  }
+}
+
+@media (max-width: 550px) {
+  #hourlyForecastWrapper {
+    width: 90%;
+  }
 }
 </style>

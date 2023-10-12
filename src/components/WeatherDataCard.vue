@@ -2,7 +2,6 @@
 import { WeatherData } from "../types";
 
 defineProps<{ weatherData: WeatherData }>();
-
 </script>
 
 <template>
@@ -53,7 +52,7 @@ defineProps<{ weatherData: WeatherData }>();
 
 <style scoped>
 #weatherDataWrapper {
-  height: 40%;
+  height: 350px;
   width: 50%;
   background-color: #7fc8f8;
   border-radius: 15px;
@@ -73,7 +72,7 @@ defineProps<{ weatherData: WeatherData }>();
   font-size: 1.2rem;
   font-weight: 500;
   margin-top: 1rem;
-  margin-bottom: -2rem;
+  margin-bottom: -1rem;
 }
 
 #weatherDataWrapper > p:nth-child(3) {
@@ -112,5 +111,40 @@ defineProps<{ weatherData: WeatherData }>();
 
 .secondColWrapper > .data:last-child {
   border-bottom: none;
+}
+
+@media (max-width: 1100px) {
+  #weatherDataWrapper {
+    width: 70%;
+  }
+}
+
+@media (max-width: 880px) {
+  #weatherDataWrapper {
+    height: 400px;
+  }
+}
+
+@media (max-width: 550px) {
+  #weatherDataWrapper {
+    width: 90%;
+    height: 500px;
+  }
+
+  .dataColsWrapper {
+    flex-direction: column;
+  }
+
+  .firstColWrapper {
+    width: 100%;
+  }
+
+  .secondColWrapper {
+    width: 100%;
+  }
+
+  .firstColWrapper > .data:last-child {
+    border-bottom: 1px solid lightgray;
+  }
 }
 </style>

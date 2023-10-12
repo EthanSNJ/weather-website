@@ -36,7 +36,7 @@ export type HourlyForecast = {
 }
 
 export type DailyForecast = {
-    date: string;
+    date: number;
     maxTemp: number;
     minTemp: number;
     icon: string;

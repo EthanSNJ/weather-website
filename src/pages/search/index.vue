@@ -4,6 +4,7 @@ import axios from "axios";
 import MainWeatherCard from "../../components/MainWeatherCard.vue";
 import WeatherDataCard from "../../components/WeatherDataCard.vue";
 import HourlyForecastCard from "../../components/HourlyForecastCard.vue";
+import DailyForecastCard from "../../components/DailyForecastCard.vue";
 import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../../types";
 
 let input = ref("");
@@ -13,10 +14,11 @@ let suggestion = ref({
   formatted: "",
 });
 let weather = ref<Weather>();
+let shouldDisplaySuggestion = ref(false);
 
 watch(input, (value) => {
   if (value.length >= 3) {
-    console.log("searching for", value);
+    shouldDisplaySuggestion.value = true;
     axios
       .get(
         `https://api.mapbox.com/search/searchbox/v1/suggest?q=${
@@ -26,7 +28,6 @@ watch(input, (value) => {
         }&session_token=12345678coucou&types=country,city`
       )
       .then((response) => {
-        console.log("response data == ", response.data);
         suggestion.value.label =
           response.data.suggestions[0].feature_type === "country"
             ? response.data.suggestions[0].name
@@ -44,11 +45,11 @@ watch(input, (value) => {
       .catch((error) => {
         console.log(error);
       });
-    console.log("suggestion", suggestion);
   }
 });
 
 const searchCity = (city: string) => {
+  input.value = city;
   const options = {
     method: "GET",
     url: "https://weatherapi-com.p.rapidapi.com/forecast.json",
@@ -65,9 +66,7 @@ const searchCity = (city: string) => {
   axios
     .request(options)
     .then(function (response) {
-      console.log(response.data);
       weather.value = mapWeather(response.data);
-      console.log("mapped weather", weather)
     })
     .catch(function (error) {
       console.error(error);
@@ -142,6 +141,13 @@ const mapWeather = (weatherApiData: any) => {
   return weather;
 };
 
+document.addEventListener("click", (event) => {
+  const target = event.target as HTMLElement;
+  if (target.id !== "city-input") {
+    shouldDisplaySuggestion.value = false;
+  }
+});
+
 </script>
 
 <template>
@@ -155,7 +161,7 @@ const mapWeather = (weatherApiData: any) => {
       />
       <span
         id="suggestion"
-        v-if="input.length >= 3"
+        v-if="input.length >= 3 && shouldDisplaySuggestion"
         @click="searchCity(suggestion.city)"
         >{{ suggestion.label }}</span
       >
@@ -163,18 +169,20 @@ const mapWeather = (weatherApiData: any) => {
     <MainWeatherCard v-if="weather" :mainWeather="weather.mainWeather" />
     <WeatherDataCard v-if="weather" :weatherData="weather.weatherData" />
     <HourlyForecastCard v-if="weather" :hourlyForecast="weather.hourlyForecast" />
+    <DailyForecastCard v-if="weather" :dailyForecast="weather.dailyForecast" />
   </div>
 </template>
 
 <style scoped>
 #wrapper {
   width: 100%;
-  height: 100%;
+  min-height: 100vh;
   padding: 3rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 10px;
 }
 
 #input-container {

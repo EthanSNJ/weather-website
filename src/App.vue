@@ -12,6 +12,6 @@
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   background-color: #5aa9e6;
-  height: 100%;
+  min-height: 100%;
 }
 </style>
