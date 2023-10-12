@@ -1,10 +1,9 @@
-<script setup lang="ts"></script>
+<script setup lang="ts">
+import Weather from './pages/Weather.vue';
+</script>
 
 <template>
-  <!-- <nav>
-    <router-link to="/">Home</router-link> | <router-link to="/hello">Hello</router-link>
-  </nav> -->
-  <router-view />
+  <Weather />
 </template>
 
 <style>

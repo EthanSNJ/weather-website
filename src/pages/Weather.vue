@@ -1,11 +1,11 @@
 <script setup lang="ts">
 import { ref, watch } from "vue";
 import axios from "axios";
-import MainWeatherCard from "../../components/MainWeatherCard.vue";
-import WeatherDataCard from "../../components/WeatherDataCard.vue";
-import HourlyForecastCard from "../../components/HourlyForecastCard.vue";
-import DailyForecastCard from "../../components/DailyForecastCard.vue";
-import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../../types";
+import MainWeatherCard from "../components/MainWeatherCard.vue";
+import WeatherDataCard from "../components/WeatherDataCard.vue";
+import HourlyForecastCard from "../components/HourlyForecastCard.vue";
+import DailyForecastCard from "../components/DailyForecastCard.vue";
+import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../types";
 
 let input = ref("");
 let suggestion = ref({
