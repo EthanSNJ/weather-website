@@ -173,6 +173,7 @@ document.addEventListener("click", (event) => {
       <input
         id="city-input"
         type="text"
+        placeholder="Search for a city"
         v-model="input"
         @input="input = ($event.target as HTMLInputElement)?.value"
       />
