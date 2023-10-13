@@ -28,7 +28,10 @@ const filteredHourlyForecast = computed(() => {
       </p>
       <img :src="forecast.icon" />
       <p>{{ forecast.temperature + "°C" }}</p>
-      <p>{{ forecast.precipitationPercentage + "%" }}</p>
+      <div class="precipitationWrapper">
+        <img src="../assets/droplet.svg" alt="droplet">
+        <p>{{ forecast.precipitationPercentage + "%" }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -66,6 +69,18 @@ const filteredHourlyForecast = computed(() => {
 
 #hourlyForecastWrapper > .hourlyForecast:last-child {
   border-right: none;
+}
+
+.precipitationWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.precipitationWrapper > img {
+  height: 10px;
+  width: auto;
+  aspect-ratio: 1/1;
 }
 
 @media (max-width: 1100px) {

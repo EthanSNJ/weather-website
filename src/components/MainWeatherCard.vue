@@ -1,8 +1,10 @@
 <script setup lang="ts">
 import { MainWeather } from "../types";
+import { useFavoriteStore } from "../store/pinia";
 
 defineProps<{ mainWeather: MainWeather }>();
 
+const favoriteStore = useFavoriteStore();
 const formatUnixTimestampToHHMM = (timestamp: number): string => {
   const date = new Date(timestamp * 1000);
   const hours = date.getUTCHours();
@@ -23,13 +25,17 @@ const formatUnixTimestampToHHMM = (timestamp: number): string => {
 
 <template>
   <div id="mainWeatherWrapper">
-    <p>
-      {{
-        mainWeather.title +
-        " As of " +
-        formatUnixTimestampToHHMM(mainWeather.time)
-      }}
-    </p>
+    <div class="titleWrapper">
+      <img src="../assets/starFilled.svg" v-if="favoriteStore.isFavoriteCity(mainWeather.title)" @click="favoriteStore.removeFavoriteCity(mainWeather.title)"/>
+      <img src="../assets/star.svg" v-else @click="favoriteStore.addFavoriteCity(mainWeather.title)"/>
+      <p>
+        {{
+          mainWeather.title +
+          " As of " +
+          formatUnixTimestampToHHMM(mainWeather.time)
+        }}
+      </p>
+    </div>
     <div class="temperatureIconWrapper">
       <div class="temperatureStatusWrapper">
         <p>{{ mainWeather.temperature + "°" }}</p>
@@ -53,7 +59,19 @@ const formatUnixTimestampToHHMM = (timestamp: number): string => {
   color: #f9f9f9;
 }
 
-#mainWeatherWrapper > p:first-child {
+.titleWrapper {
+  display: flex;
+  gap: 10px;
+}
+
+.titleWrapper > img {
+  height: 30px;
+  width: auto;
+  aspect-ratio: 1/1;
+  cursor: pointer;
+}
+
+.titleWrapper > p {
   font-size: 1.4rem;
   font-weight: 500;
 }
@@ -75,7 +93,7 @@ const formatUnixTimestampToHHMM = (timestamp: number): string => {
   display: flex;
   flex-direction: column;
   /* justify-content: space-between; */
-    justify-content: center;
+  justify-content: center;
 }
 .temperatureStatusWrapper > p:first-child {
   font-size: 4rem;

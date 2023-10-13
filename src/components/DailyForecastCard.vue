@@ -19,7 +19,10 @@ let dateNow = Math.floor(Date.now() / 1000);
       <img :src="forecast.icon" />
       <p>{{ forecast.maxTemp + "°C" }}</p>
       <p>{{ forecast.minTemp + "°C" }}</p>
-      <p>{{ forecast.precipitationPercentage + "%" }}</p>
+      <div class="precipitationWrapper">
+        <img src="../assets/droplet.svg" alt="droplet">
+        <p>{{ forecast.precipitationPercentage + "%" }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -58,6 +61,18 @@ let dateNow = Math.floor(Date.now() / 1000);
 
 #dailyForecastWrapper > .dailyForecast:first-child {
   font-weight: 800;
+}
+
+.precipitationWrapper {
+  display: flex;
+  align-items: baseline;
+  gap: 5px;
+}
+
+.precipitationWrapper > img {
+  height: 10px;
+  width: auto;
+  aspect-ratio: 1/1;
 }
 
 @media (max-width: 1100px) {

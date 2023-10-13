@@ -13,7 +13,7 @@ defineProps<{ weatherData: WeatherData }>();
       <div class="firstColWrapper">
         <div class="data">
           <p>High/Low</p>
-          <p>{{ weatherData.maxTemp + "°/" + weatherData.minTemp }}°</p>
+          <p>{{ weatherData.maxTemp + "°C/" + weatherData.minTemp }}°C</p>
         </div>
         <div class="data">
           <p>Humidity</p>

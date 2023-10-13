@@ -5,7 +5,14 @@ import MainWeatherCard from "../components/MainWeatherCard.vue";
 import WeatherDataCard from "../components/WeatherDataCard.vue";
 import HourlyForecastCard from "../components/HourlyForecastCard.vue";
 import DailyForecastCard from "../components/DailyForecastCard.vue";
-import { Weather, MainWeather, WeatherData, HourlyForecast, DailyForecast } from "../types";
+import {
+  Weather,
+  MainWeather,
+  WeatherData,
+  HourlyForecast,
+  DailyForecast,
+} from "../types";
+import { useFavoriteStore } from "../store/pinia";
 
 let input = ref("");
 let suggestion = ref({
@@ -15,6 +22,7 @@ let suggestion = ref({
 });
 let weather = ref<Weather>();
 let shouldDisplaySuggestion = ref(false);
+const favoriteStore = useFavoriteStore();
 
 watch(input, (value) => {
   if (value.length >= 3) {
@@ -108,8 +116,11 @@ const mapHourlyForecast = (weatherApiData: any) => {
     const hourlyForecastData: HourlyForecast = {
       time: weatherApiData.forecast.forecastday[0].hour[i].time_epoch,
       temperature: weatherApiData.forecast.forecastday[0].hour[i].temp_c,
-      icon: "https://" + weatherApiData.forecast.forecastday[0].hour[i].condition.icon,
-      precipitationPercentage: weatherApiData.forecast.forecastday[0].hour[i].will_it_rain,
+      icon:
+        "https://" +
+        weatherApiData.forecast.forecastday[0].hour[i].condition.icon,
+      precipitationPercentage:
+        weatherApiData.forecast.forecastday[0].hour[i].chance_of_rain,
     };
     hourlyForecast.push(hourlyForecastData);
   }
@@ -123,8 +134,10 @@ const mapDailyForecast = (weatherApiData: any) => {
       date: weatherApiData.forecast.forecastday[i].date_epoch,
       minTemp: weatherApiData.forecast.forecastday[i].day.mintemp_c,
       maxTemp: weatherApiData.forecast.forecastday[i].day.maxtemp_c,
-      icon: "https://" + weatherApiData.forecast.forecastday[i].day.condition.icon,
-      precipitationPercentage: weatherApiData.forecast.forecastday[i].day.daily_will_it_rain,
+      icon:
+        "https://" + weatherApiData.forecast.forecastday[i].day.condition.icon,
+      precipitationPercentage:
+        weatherApiData.forecast.forecastday[i].day.daily_chance_of_rain,
     };
     dailyForecast.push(dailyForecastData);
   }
@@ -147,11 +160,15 @@ document.addEventListener("click", (event) => {
     shouldDisplaySuggestion.value = false;
   }
 });
-
 </script>
 
 <template>
   <div id="wrapper">
+    <div class="favsWrapper">
+      <div class="fav" v-for="city in favoriteStore.favoriteCities" @click="searchCity(city)">
+        <p>{{ city }}</p>
+      </div>
+    </div>
     <div id="input-container">
       <input
         id="city-input"
@@ -168,7 +185,10 @@ document.addEventListener("click", (event) => {
     </div>
     <MainWeatherCard v-if="weather" :mainWeather="weather.mainWeather" />
     <WeatherDataCard v-if="weather" :weatherData="weather.weatherData" />
-    <HourlyForecastCard v-if="weather" :hourlyForecast="weather.hourlyForecast" />
+    <HourlyForecastCard
+      v-if="weather"
+      :hourlyForecast="weather.hourlyForecast"
+    />
     <DailyForecastCard v-if="weather" :dailyForecast="weather.dailyForecast" />
   </div>
 </template>
@@ -181,8 +201,42 @@ document.addEventListener("click", (event) => {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
+  justify-content: flex-start;
   gap: 10px;
+  margin-top: 40px;
+}
+
+.favsWrapper {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 40px;
+  background: #7fc8f8;
+  display: flex;
+  align-items: flex-start;
+  overflow-x: scroll;
+}
+
+.fav {
+  height: 100%;
+  min-width: 200px;
+  cursor: pointer;
+  border-right: 1px solid lightgray;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #f9f9f9;
+}
+
+.fav > p {
+  font-size: 1rem;
+  font-weight: 500;
+  text-align: center;
+  max-width: 150px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 #input-container {

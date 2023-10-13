@@ -42,3 +42,5 @@ export type DailyForecast = {
     icon: string;
     precipitationPercentage: number;
 }
+
+export type FavoriteCity =  string;
